@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <title>{{ title }}</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <link rel="stylesheet" href="static/css/main.css" />
+</head>
+
+<body>
+  <aside class="sidebar">
+    <img id="linebotQRCode" src="/static/image/LineBotQRCode.png" alt="LineBot QR Code" height="25%">
+    <nav class="nav">
+      <ul id="nav">
+        <li class="active button"><a href="/">首頁</a></li>
+        <li class="button"><a href="/text-translation">文字翻譯</a></li>
+        <li class="button"><a href="/audio-translation">語音翻譯</a></li>
+        <li class="button"><a href="/image-translation">圖片翻譯</a></li>
+        <li class="button"><a href="/file-translation">PDF文件翻譯</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <div class="wrap-all-the-things"></div>
+
+
+  {% block content %}{% endblock content %}
+  {% include 'footer.html' %}
+</body>
+
+
+<script src="static/js/main.js"></script>
+</html>

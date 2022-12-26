@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="content">
+    <form method="post">
+        <section class="input-block">
+            <div class="select-div">
+                <label class="display-text">Input</label>
+                <select name="language1" type="text" list="language1" value="{{ language1 }}">
+                    <option value="ar" {{ lang1_selected[0] }}>Arabic</option>
+                    <option value="ca" {{ lang1_selected[1] }}>Catalan</option>
+                    <option value="zh-Hans" {{ lang1_selected[2] }}>Chinese (Simplified)</option>
+                    <option value="zh-Hant" {{ lang1_selected[3] }}>Chinese (Traditional)</option>
+                    <option value="hr" {{ lang1_selected[4] }}>Croatian</option>
+                    <option value="en" {{ lang1_selected[5] }}>English</option>
+                    <option value="fr" {{ lang1_selected[6] }}>French</option>
+                    <option value="de" {{ lang1_selected[7] }}>German</option>
+                    <option value="el" {{ lang1_selected[8] }}>Greek</option>
+                    <option value="he" {{ lang1_selected[9] }}>Hebrew</option>
+                    <option value="hi" {{ lang1_selected[10] }}>Hindi</option>
+                    <option value="it" {{ lang1_selected[11] }}>Italian</option>
+                    <option value="ja" {{ lang1_selected[12] }}>Japanese</option>
+                    <option value="ko" {{ lang1_selected[13] }}>Korean</option>
+                    <option value="pt" {{ lang1_selected[14] }}>Portuguese</option>
+                    <option value="ru" {{ lang1_selected[15] }}>Russian</option>
+                    <option value="es" {{ lang1_selected[16] }}>Spanish</option>
+                    <option value="th" {{ lang1_selected[17] }}>Thai</option>
+                    <option value="tr" {{ lang1_selected[18] }}>Turkish</option>
+                    <option value="vi" {{ lang1_selected[19] }}>Vietnamese</option>
+                </select>
+            </div>
+            <div class="input-div">
+                <div class="text-container" id="textInput-container">
+                    <textarea type="text" name="input-text" id="input-text" placeholder="請輸入文字" cols="50" rows="5">{{ input_text }}</textarea>
+                </div>
+            </div>
+        </section>
+        <section class="button-block">
+            <div class="button-container" id="convertBtn-container">    
+                <button type="submit" id="convertBtn">Convert</button>
+            </div>
+        </section>
+        <section class="output-block">
+            <div class="select-div">
+                <label class="display-text">Output</label>
+                <select name="language2" value="{{ language2 }}">
+                    <option value="ar" {{ lang2_selected[0] }}>Arabic</option>
+                    <option value="ca" {{ lang2_selected[1] }}>Catalan</option>
+                    <option value="zh-Hans" {{ lang2_selected[2] }}>Chinese (Simplified)</option>
+                    <option value="zh-Hant" {{ lang2_selected[3] }}>Chinese (Traditional)</option>
+                    <option value="hr" {{ lang2_selected[4] }}>Croatian</option>
+                    <option value="en" {{ lang2_selected[5] }}>English</option>
+                    <option value="fr" {{ lang2_selected[6] }}>French</option>
+                    <option value="de" {{ lang2_selected[7] }}>German</option>
+                    <option value="el" {{ lang2_selected[8] }}>Greek</option>
+                    <option value="he" {{ lang2_selected[9] }}>Hebrew</option>
+                    <option value="hi" {{ lang2_selected[10] }}>Hindi</option>
+                    <option value="it" {{ lang2_selected[11] }}>Italian</option>
+                    <option value="ja" {{ lang2_selected[12] }}>Japanese</option>
+                    <option value="ko" {{ lang2_selected[13] }}>Korean</option>
+                    <option value="pt" {{ lang2_selected[14] }}>Portuguese</option>
+                    <option value="ru" {{ lang2_selected[15] }}>Russian</option>
+                    <option value="es" {{ lang2_selected[16] }}>Spanish</option>
+                    <option value="th" {{ lang2_selected[17] }}>Thai</option>
+                    <option value="tr" {{ lang2_selected[18] }}>Turkish</option>
+                    <option value="vi" {{ lang2_selected[19] }}>Vietnamese</option>
+                </select>
+            </div>
+            <div class="input-div">
+                <div class="text-container" id="textOutput-container">
+                    <textarea type="text" id="translated-text" placeholder="翻譯後的結果" cols="50" rows="5">{{ translated_text }}</textarea>
+                </div>
+            </div>
+        </section>
+    </form>
+</div>
+{% endblock content %}

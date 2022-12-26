@@ -1,0 +1,14 @@
+{% extends  'base.html' %}
+
+{% block content %}
+<div class="content">
+    <section class="menu-block">
+        <ul class="index-button-container">
+            <li class="menu-button"><a href="/text-translation"><button>翻譯輸入文字</button></a></li>
+            <li class="menu-button"><a href="/audio-translation"><button>翻譯語音<br><span>(支援 麥克風輸入 *.wav *.aiff *.flac)</span></button></a></li>
+            <li class="menu-button"><a href="/image-translation"><button>翻譯圖片文字<br><span>(支援 *.png *.jpeg *.bmp *.tiff)</span></button></a></li>
+            <li class="menu-button"><a href="/file-translation"><button>翻譯PDF檔案</button></a></li>
+        </ul>
+    </section>
+</div>
+{% endblock content %}
