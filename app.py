@@ -6,17 +6,11 @@ from service_function.speak_api import *
 from service_function.image_api import *
 from service_function.pdf_vision_api import *
 from copy import deepcopy
+from pathlib import Path
 
-try:
-    os.mkdir('C:\\source')
-except FileExistsError:
-    print('C:\\source already existed')
-else:
-    os.mkdir('C:\\source\\audio')
-    os.mkdir('C:\\source\\image')
-    os.mkdir('C:\\source\\pdf')
+web_url = 'https://52ba-140-115-202-103.ngrok.io'
 
-UPLOAD_FOLDER = 'C:\\source'
+UPLOAD_FOLDER = '.\\static'
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -119,24 +113,21 @@ def image_translation(title='圖片翻譯', translated_text='', language1='', la
                 return render_template('image-translation.html', title=title, translated_text="請輸入圖片網址或上傳圖片", language1=language1, language2=language2, lang1_selected=lang1_selected, lang2_selected=lang2_selected)
 
         if 'convert-file' in request.form:
-            return render_template('image-translation.html', title=title, translated_text=translated_text, language1=language1, language2=language2, lang1_selected=lang1_selected, lang2_selected=lang2_selected) # 暫時使用
             image = request.files['input-image']
             if image:
-                filename = secure_filename(image.filename)
+                filename = image.filename
+                print(type(filename), filename)
+                print('endpoint', request.endpoint)
                 image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                input_text = image_ocr(read_image_url=url_for('uploaded_file', filename=filename))
-                os.remove(app.config['UPLOAD_FOLDER']+'\\'+filename)
+                image_url = web_url + url_for('static',filename=filename)
+                print('image_url', image_url)
+                input_text = image_ocr(read_image_url=image_url)
                 translated_text = translate(input_text, language1, language2)
-                language1 = 'en'
-                language2 = 'zh-Hant'
                 lang1_selected[language_dict[language1]] =' selected'
                 lang2_selected[language_dict[language2]] =' selected'
+                # os.remove(app.config['UPLOAD_FOLDER']+'\\'+filename)  # permission error
                 return render_template('image-translation.html', title=title, translated_text=translated_text, language1=language1, language2=language2, lang1_selected=lang1_selected, lang2_selected=lang2_selected)
             else:
-                language1 = 'en'
-                language2 = 'zh-Hant'
-                lang1_selected[language_dict[language1]] =' selected'
-                lang2_selected[language_dict[language2]] =' selected'
                 return render_template('image-translation.html', title=title, translated_text="請輸入圖片網址或上傳圖片", language1=language1, language2=language2, lang1_selected=lang1_selected, lang2_selected=lang2_selected)
     else:
         print("do nothing")
@@ -173,11 +164,11 @@ def audio_translation(title='語音翻譯', input_text='', translated_text='', l
                 print("request.files['input-audio']", request.files['input-audio'])
                 input_audio = request.files['input-audio']
                 filename = input_audio.filename
-                input_audio.save(os.path.join(app.config['UPLOAD_FOLDER']+'\\audio', filename))
-                file_path = app.config['UPLOAD_FOLDER']+'\\audio\\'+filename
+                input_audio.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                file_path = app.config['UPLOAD_FOLDER']+'\\'+filename
                 input_text = transcribe_audio(audio_path=file_path, language=language1)
                 translated_text = translate(input_text, language1, language2)
-                os.remove(app.config['UPLOAD_FOLDER']+'\\audio\\'+filename)
+                os.remove(app.config['UPLOAD_FOLDER']+'\\'+filename)
                 return render_template('audio-translation.html', title=title, input_text=input_text, translated_text=translated_text, language1=language1, language2=language2, lang1_selected=lang1_selected, lang2_selected=lang2_selected)
             else:
                 print("no file")
@@ -204,11 +195,11 @@ def file_translation(title='PDF文件翻譯', translated_text='', language1='', 
         input_pdf = request.files['input-pdf']
         if input_pdf:
             filename = secure_filename(input_pdf.filename)
-            input_pdf.save(os.path.join(app.config['UPLOAD_FOLDER']+'\\pdf', filename))
-            file_path = app.config['UPLOAD_FOLDER']+'\\pdf\\'+filename
+            input_pdf.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            file_path = app.config['UPLOAD_FOLDER']+'\\'+filename
             input_text = recognize_pdf(pdf_path=file_path)
             translated_text = translate(input_text, language1, language2)
-            os.remove(app.config['UPLOAD_FOLDER']+'\\pdf\\'+filename)
+            os.remove(app.config['UPLOAD_FOLDER']+'\\'+filename)
             return render_template('file-translation.html', title=title, input_text=input_text,translated_text=translated_text, language1=language1, language2=language2, lang1_selected=lang1_selected, lang2_selected=lang2_selected)
         else:
             return render_template('file-translation.html', title=title, translated_text="請放入檔案", language1=language1, language2=language2, lang1_selected=lang1_selected, lang2_selected=lang2_selected)
@@ -230,5 +221,5 @@ def page_not_found(e):
     return render_template('500.html'), 500
 
 if __name__ == "__main__":
-    app.run(host='127.0.0.1', port=5566, debug=True)
+    app.run(port=5566, debug=True)
 
