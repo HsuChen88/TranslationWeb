@@ -8,7 +8,7 @@ from service_function.pdf_vision_api import *
 from copy import deepcopy
 from pathlib import Path
 
-web_url = 'https://aitranslation.azurewebsites.net'
+web_url = 'https://aitranslation.azurewebsites.net\\'
 
 UPLOAD_FOLDER = '.\\static'
 app = Flask(__name__)
