@@ -8,9 +8,9 @@ from service_function.pdf_vision_api import *
 from copy import deepcopy
 from pathlib import Path
 
-web_url = 'https://aitranslation.azurewebsites.net\\'
+web_url = 'https://aitranslation.azurewebsites.net/'
 
-UPLOAD_FOLDER = '.\\static'
+UPLOAD_FOLDER = '/home/runner/work/TranslationWeb/TranslationWeb/static'
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -94,7 +94,7 @@ def text_translation(title='文字翻譯', input_text='', translated_text='', la
         return render_template('text-translation.html', title=title, input_text=input_text, translated_text=translated_text, language1=language1, language2=language2, lang1_selected=lang1_selected, lang2_selected=lang2_selected)
 
 @app.route('/image-translation', methods=['GET','POST'])
-def image_translation(title='圖片翻譯', translated_text='', language1='', language2=''):
+def image_translation(title='圖片翻譯', image_url = '', translated_text='', language1='', language2=''):
     selections_list = list('' for i in range(0,20))
     lang1_selected = deepcopy(selections_list)
     lang2_selected = deepcopy(selections_list)
@@ -105,12 +105,13 @@ def image_translation(title='圖片翻譯', translated_text='', language1='', la
         lang2_selected[language_dict[language2]] =' selected'
         if 'convert-url' in request.form:
             if request.form['input-url']:
-                input_url = request.form['input-url']
-                input_text = image_ocr(input_url)
+                image_url = request.form['input-url']
+                print(image_url)
+                input_text = image_ocr(image_url)
                 translated_text = translate(input_text, language1, language2)
-                return render_template('image-translation.html', title=title, translated_text=translated_text, language1=language1, language2=language2, lang1_selected=lang1_selected, lang2_selected=lang2_selected)
+                return render_template('image-translation.html', title=title, image_url=image_url, translated_text=translated_text, language1=language1, language2=language2, lang1_selected=lang1_selected, lang2_selected=lang2_selected)
             else:
-                return render_template('image-translation.html', title=title, translated_text="請輸入圖片網址或上傳圖片", language1=language1, language2=language2, lang1_selected=lang1_selected, lang2_selected=lang2_selected)
+                return render_template('image-translation.html', title=title, image_url=image_url, translated_text="請輸入圖片網址或上傳圖片", language1=language1, language2=language2, lang1_selected=lang1_selected, lang2_selected=lang2_selected)
 
         if 'convert-file' in request.form:
             image = request.files['input-image']
@@ -125,10 +126,11 @@ def image_translation(title='圖片翻譯', translated_text='', language1='', la
                 translated_text = translate(input_text, language1, language2)
                 lang1_selected[language_dict[language1]] =' selected'
                 lang2_selected[language_dict[language2]] =' selected'
-                # os.remove(app.config['UPLOAD_FOLDER']+'\\'+filename)  # permission error
-                return render_template('image-translation.html', title=title, translated_text=translated_text, language1=language1, language2=language2, lang1_selected=lang1_selected, lang2_selected=lang2_selected)
+                image.close()
+                os.remove(app.config['UPLOAD_FOLDER']+'/'+filename)  # permission error
+                return render_template('image-translation.html', title=title, image_url=image_url, translated_text=translated_text, language1=language1, language2=language2, lang1_selected=lang1_selected, lang2_selected=lang2_selected)
             else:
-                return render_template('image-translation.html', title=title, translated_text="請輸入圖片網址或上傳圖片", language1=language1, language2=language2, lang1_selected=lang1_selected, lang2_selected=lang2_selected)
+                return render_template('image-translation.html', title=title, image_url=image_url, translated_text="請輸入圖片網址或上傳圖片", language1=language1, language2=language2, lang1_selected=lang1_selected, lang2_selected=lang2_selected)
     else:
         print("do nothing")
         language1 = 'en'

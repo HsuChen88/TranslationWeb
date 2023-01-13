@@ -6,12 +6,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-  <link rel="stylesheet" href="static/css/main.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='/css/main.css') }}" />
 </head>
 
 <body>
   <aside class="sidebar">
-    <img id="linebotQRCode" src="/static/image/LineBotQRCode.png" alt="LineBot QR Code" height="25%">
+    <img id="linebotQRCode" src="{{ url_for('static', filename='/image/LineBotQRCode.png') }}" alt="LineBot QR Code" height="25%">
     <nav class="nav">
       <ul id="nav">
         <li class="active button"><a href="/">首頁</a></li>
@@ -30,5 +30,5 @@
 </body>
 
 
-<script src="static/js/main.js"></script>
+<script src="{{ url_for('static', filename='/js/main.js') }}"></script>
 </html>
