@@ -122,7 +122,7 @@ def image_translation(title='圖片翻譯', image_url = '', translated_text='', 
                 translated_text = translate(input_text, language1, language2)
                 lang1_selected[language_dict[language1]] =' selected'
                 lang2_selected[language_dict[language2]] =' selected'
-                os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))  # permission error
+                # os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))  # permission error
                 return render_template('image-translation.html', title=title, image_url=image_url, translated_text=translated_text, language1=language1, language2=language2, lang1_selected=lang1_selected, lang2_selected=lang2_selected)
             else:
                 return render_template('image-translation.html', title=title, image_url=image_url, translated_text="請輸入圖片網址或上傳圖片", language1=language1, language2=language2, lang1_selected=lang1_selected, lang2_selected=lang2_selected)
