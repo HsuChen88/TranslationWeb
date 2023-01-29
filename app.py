@@ -6,11 +6,11 @@ from service_function.speak_api import *
 from service_function.image_api import *
 from service_function.pdf_vision_api import *
 from copy import deepcopy
-from pathlib import Path
 
-web_url = 'https://aitranslation.azurewebsites.net/'
+web_url = 'https://aitranslation.azurewebsites.net'
 
-UPLOAD_FOLDER = '/home/runner/work/TranslationWeb/TranslationWeb/static'
+UPLOAD_FOLDER = os.getcwd() + '\\static'
+# UPLOAD_FOLDER = '/home/runner/work/TranslationWeb/TranslationWeb/static'
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -86,7 +86,6 @@ def text_translation(title='文字翻譯', input_text='', translated_text='', la
         return render_template('text-translation.html', title=title, input_text=input_text, translated_text=translated_text, language1=language1, language2=language2, lang1_selected=lang1_selected, lang2_selected=lang2_selected)
     else:
         print("do nothing")
-        print(request.args)
         language1 = 'en'
         language2 = 'zh-Hant'
         lang1_selected[language_dict[language1]] =' selected'
@@ -106,7 +105,6 @@ def image_translation(title='圖片翻譯', image_url = '', translated_text='', 
         if 'convert-url' in request.form:
             if request.form['input-url']:
                 image_url = request.form['input-url']
-                print(image_url)
                 input_text = image_ocr(image_url)
                 translated_text = translate(input_text, language1, language2)
                 return render_template('image-translation.html', title=title, image_url=image_url, translated_text=translated_text, language1=language1, language2=language2, lang1_selected=lang1_selected, lang2_selected=lang2_selected)
@@ -117,8 +115,6 @@ def image_translation(title='圖片翻譯', image_url = '', translated_text='', 
             image = request.files['input-image']
             if image:
                 filename = image.filename
-                print(type(filename), filename)
-                print('endpoint', request.endpoint)
                 image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 image_url = web_url + url_for('static',filename=filename)
                 print('image_url', image_url)
@@ -126,8 +122,7 @@ def image_translation(title='圖片翻譯', image_url = '', translated_text='', 
                 translated_text = translate(input_text, language1, language2)
                 lang1_selected[language_dict[language1]] =' selected'
                 lang2_selected[language_dict[language2]] =' selected'
-                image.close()
-                os.remove(app.config['UPLOAD_FOLDER']+'/'+filename)  # permission error
+                os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))  # permission error
                 return render_template('image-translation.html', title=title, image_url=image_url, translated_text=translated_text, language1=language1, language2=language2, lang1_selected=lang1_selected, lang2_selected=lang2_selected)
             else:
                 return render_template('image-translation.html', title=title, image_url=image_url, translated_text="請輸入圖片網址或上傳圖片", language1=language1, language2=language2, lang1_selected=lang1_selected, lang2_selected=lang2_selected)
