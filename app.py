@@ -76,9 +76,10 @@ def text_translation(title='文字翻譯', input_text='', translated_text='', la
     lang1_selected = deepcopy(selections_list)
     lang2_selected = deepcopy(selections_list)
     if request.method=='POST':
-        input_text = request.values['input-text']
-        language1 = request.values['language1']
-        language2 = request.values['language2']
+        reqest_values = request.values
+        input_text = reqest_values['input-text']
+        language1 = reqest_values['language1']
+        language2 = reqest_values['language2']
         lang1_selected[language_dict[language1]] =' selected'
         lang2_selected[language_dict[language2]] =' selected'
         print("from ", language1, " to ", language2)
@@ -98,20 +99,22 @@ def image_translation(title='圖片翻譯', image_url = '', translated_text='', 
     lang1_selected = deepcopy(selections_list)
     lang2_selected = deepcopy(selections_list)
     if request.method=='POST':
-        language1 = request.values['language1']
-        language2 = request.values['language2']
+        reqest_values = request.values
+        reqest_form = request.form
+        language1 = reqest_values['language1']
+        language2 = reqest_values['language2']
         lang1_selected[language_dict[language1]] =' selected'
         lang2_selected[language_dict[language2]] =' selected'
-        if 'convert-url' in request.form:
-            if request.form['input-url']:
-                image_url = request.form['input-url']
+        if 'convert-url' in reqest_form:
+            if reqest_form['input-url']:
+                image_url = reqest_form['input-url']
                 input_text = image_ocr(image_url)
                 translated_text = translate(input_text, language1, language2)
                 return render_template('image-translation.html', title=title, image_url=image_url, translated_text=translated_text, language1=language1, language2=language2, lang1_selected=lang1_selected, lang2_selected=lang2_selected)
             else:
                 return render_template('image-translation.html', title=title, image_url=image_url, translated_text="請輸入圖片網址或上傳圖片", language1=language1, language2=language2, lang1_selected=lang1_selected, lang2_selected=lang2_selected)
 
-        if 'convert-file' in request.form:
+        if 'convert-file' in reqest_form:
             image = request.files['input-image']
             if image:
                 filename = image.filename
@@ -141,24 +144,25 @@ def audio_translation(title='語音翻譯', input_text='', translated_text='', l
     lang2_selected = deepcopy(selections_list)
     
     if request.method=='POST':
-        print(request.form)
-        language1 = request.values['language1']
-        language2 = request.values['language2']
+        reqest_values = request.values
+        reqest_form = request.form
+        language1 = reqest_values['language1']
+        language2 = reqest_values['language2']
         lang1_selected[language_dict[language1]] =' selected'
         lang2_selected[language_dict[language2]] =' selected'
-        if 'speak' in request.form:
+        if 'speak' in reqest_form:
             input_text = transcribe_speaking(language=language1)
             translated_text = translate(input_text, language1, language2)
             return render_template('audio-translation.html', title=title, input_text=input_text, translated_text=translated_text, language1=language1, language2=language2, lang1_selected=lang1_selected, lang2_selected=lang2_selected)
-        if 'convert' in request.form:
+        if 'convert' in reqest_form:
             file_type = request.files['input-audio'].content_type
             print("file_type", file_type)
             match = re.findall("^audio/", file_type)
             print('match', match)
             if match:   # 有音檔
-                print("request.form", request.form)
-                print("files", request.files)
-                print("request.files['input-audio']", request.files['input-audio'])
+                # print("reqest_form", reqest_form)
+                # print("files", request.files)
+                # print("request.files['input-audio']", request.files['input-audio'])
                 input_audio = request.files['input-audio']
                 filename = input_audio.filename
                 input_audio.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -185,8 +189,9 @@ def file_translation(title='PDF文件翻譯', translated_text='', language1='', 
     lang1_selected = deepcopy(selections_list)
     lang2_selected = deepcopy(selections_list)
     if request.method=='POST':
-        language1 = request.values['language1']
-        language2 = request.values['language2']
+        reqest_values = request.values
+        language1 = reqest_values['language1']
+        language2 = reqest_values['language2']
         lang1_selected[language_dict[language1]] =' selected'
         lang2_selected[language_dict[language2]] =' selected'
         input_pdf = request.files['input-pdf']
