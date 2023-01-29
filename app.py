@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, url_for
+from flask import Flask, render_template, request, url_for, send_from_directory
+
 import requests, uuid, json, os, re
 from werkzeug.utils import secure_filename
 from service_function.audio_api import *
@@ -213,6 +214,10 @@ def file_translation(title='PDF文件翻譯', translated_text='', language1='', 
         lang1_selected[language_dict[language1]] =' selected'
         lang2_selected[language_dict[language2]] =' selected'
         return render_template('file-translation.html', title=title, translated_text=translated_text, language1=language1, language2=language2, lang1_selected=lang1_selected, lang2_selected=lang2_selected)
+
+@app.route('/static/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 @app.errorhandler(404)
 def page_not_found(e):
