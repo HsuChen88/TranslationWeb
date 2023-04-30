@@ -1,6 +1,6 @@
 # [TranslationWeb](https://aitranslation.azurewebsites.net)
 
-Using Flask
+使用Flask框架
 
 ### 下載所需的套件
 ```pip install -r requirements.txt```
